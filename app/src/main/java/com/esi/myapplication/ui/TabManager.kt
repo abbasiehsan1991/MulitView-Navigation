@@ -1,16 +1,19 @@
 package com.esi.myapplication.ui
 
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.esi.myapplication.MainActivity
 import com.esi.myapplication.R
 import com.esi.myapplication.ui.dashboard.DashboardFragment
 import com.esi.myapplication.ui.home.HomeFragment
 import com.esi.myapplication.ui.notification.NotificationsFragment
 
-class TabManager private constructor(private val defaultFragmentManager: FragmentManager) {
-    private val tabHistory = TabHistory().apply { push(R.id.navigation_home) }
+class TabManager private constructor(private val mainActivity: MainActivity) {
+    private val tabHistory = TabHistory()
     private var currentTabContainer: Int = 0
     private var currentTabId: Int = 0
+    private val defaultFragmentManager: FragmentManager = mainActivity.supportFragmentManager
 
     private val startDestinations = mapOf(
         R.id.navigation_home to HomeFragment::class,
@@ -36,7 +39,7 @@ class TabManager private constructor(private val defaultFragmentManager: Fragmen
     fun switchTab(tabId: Int, addToHistory: Boolean = true) {
         currentTabId = tabId
         fetchCurrentTabFragment(tabId).also {
-            setupFragment(it)
+            setupFragment(it, tabId)
         }
 
         if (addToHistory)
@@ -46,16 +49,37 @@ class TabManager private constructor(private val defaultFragmentManager: Fragmen
     fun onBackPressed() {
         fetchCurrentTabFragment(currentTabId).let { tabFragment ->
             tabFragment.childFragmentManager.backStackEntryCount.also { backStackCount ->
-                if (backStackCount == 0)
-                    return
-            }.also { backStackCount ->
-                tabFragment.childFragmentManager.getBackStackEntryAt(backStackCount - 1).name?.also {
-                    tabFragment.childFragmentManager.popBackStack(
-                        it,
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE
-                    )
+                if (backStackCount <= 1) {
+                    if (currentTabId == R.id.navigation_home)
+                        mainActivity.finish()
+                    else
+                        popTabFragments()
+                } else {
+                    popInnerFragments(tabFragment, backStackCount)
                 }
             }
+        }
+    }
+
+    private fun popTabFragments() {
+        defaultFragmentManager.backStackEntryCount.also { backStackCount ->
+            if (backStackCount <= 1)
+                mainActivity.finish()
+            else {
+                tabHistory.pop().also { currentTabId ->
+                    switchTab(currentTabId, false)
+                }
+            }
+        }
+    }
+
+    private fun popInnerFragments(tabFragment: Fragment, backStackCount: Int) {
+        tabFragment.childFragmentManager.getBackStackEntryAt(backStackCount - 1).name?.also {
+            Log.d(TAG, "popInnerFragments() called $it")
+            tabFragment.childFragmentManager.popBackStack(
+                it,
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
         }
     }
 
@@ -63,32 +87,33 @@ class TabManager private constructor(private val defaultFragmentManager: Fragmen
         return when (tabId) {
             R.id.navigation_home -> {
                 currentTabContainer = homeTabContianer
-                (fetchFragment(HomeFragment::class.java.simpleName) ?: HomeFragment())
+                (fetchFragment(R.id.navigation_home) ?: HomeFragment())
             }
 
             R.id.navigation_dashboard -> {
                 currentTabContainer = dashboardTabContainer
-                (fetchFragment(DashboardFragment::class.java.simpleName)
+                (fetchFragment(R.id.navigation_dashboard)
                     ?: DashboardFragment())
             }
 
             else -> {
                 currentTabContainer = notificationsTabContainer
-                (fetchFragment(NotificationsFragment::class.java.simpleName)
+                (fetchFragment(R.id.navigation_notifications)
                     ?: NotificationsFragment())
             }
         }
     }
 
-    private fun setupFragment(fragment: Fragment) {
+    private fun setupFragment(fragment: Fragment, tabId: Int) {
+        Log.d(TAG, "setupFragment() called with: fragment = $fragment, tabId = $tabId")
         defaultFragmentManager.beginTransaction()
-            .addToBackStack(fragment::class.java.simpleName)
-            .replace(R.id.fragmentContainerActiviy, fragment, fragment::class.java.simpleName)
+            .addToBackStack(tabId.toString())
+            .replace(R.id.fragmentContainerActiviy, fragment, tabId.toString())
             .commit()
     }
 
-    private fun fetchFragment(fragmentName: String): Fragment? {
-        defaultFragmentManager.findFragmentByTag(fragmentName).apply {
+    private fun fetchFragment(tabId: Int): Fragment? {
+        defaultFragmentManager.findFragmentByTag(tabId.toString()).apply {
             return this
         }
     }
@@ -97,9 +122,9 @@ class TabManager private constructor(private val defaultFragmentManager: Fragmen
         private const val TAG = "TabManager"
         private var INSTANCE: TabManager? = null
 
-        fun getInstance(defaultFragmentManager: FragmentManager): TabManager {
+        fun getInstance(mainActivity: MainActivity): TabManager {
             INSTANCE ?: apply {
-                INSTANCE = TabManager(defaultFragmentManager)
+                INSTANCE = TabManager(mainActivity)
             }
             return INSTANCE!!
         }

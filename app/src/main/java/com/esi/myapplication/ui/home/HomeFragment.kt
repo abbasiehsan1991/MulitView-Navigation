@@ -5,11 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.esi.myapplication.MainActivity
 import com.esi.myapplication.R
 import com.esi.myapplication.ui.DetailFragment
+import com.esi.myapplication.ui.TabManager
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
+
+    private val tabManager by lazy {
+        TabManager.getInstance(activity as MainActivity)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,12 +30,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         buttonNextPage.setOnClickListener {
-            childFragmentManager.beginTransaction()
-                .replace(
-                    R.id.fragmentContainerHome,
-                    DetailFragment.newInstance(1, HomeFragment::class.java.simpleName),
-                    DetailFragment::class.java.simpleName
-                ).commit()
+            tabManager.nagivateInTab(DetailFragment.newInstance(0,"Home Fragment"), "DetailFrag")
         }
     }
 }

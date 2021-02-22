@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     private val tabManager: TabManager by lazy {
-        TabManager.getInstance(supportFragmentManager)
+        TabManager.getInstance(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
