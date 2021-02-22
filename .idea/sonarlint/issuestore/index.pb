@@ -1,0 +1,21 @@
+
+g
+7app/src/main/java/com/esi/myapplication/MainActivity.kt,0\f\0fd0fafda6d9484aabf71c2fca4c05cbfb8357b2
+o
+?app/src/main/java/com/esi/myapplication/ui/home/HomeFragment.kt,6\1\61e823991356594b949b635fd8717a503efdacf4
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
+y
+Iapp/src/main/java/com/esi/myapplication/ui/dashboard/DashboardFragment.kt,2\1\214647e62d4985afd9fa3a3d25125a5430e53356
+b
+2app/src/main/java/com/esi/myapplication/ui/Util.kt,0\f\0fc40047e12b805d9f83a297443aca69870bf532
+€
+Papp/src/main/java/com/esi/myapplication/ui/notification/NotificationsFragment.kt,5\1\5169aeca6a77d3756d58eb52947a344120b57666
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+h
+8app/src/main/java/com/esi/myapplication/ui/TabHistory.kt,b\f\bf29de1605d3ef4a538b327f08a3fb28e7e3e9ca
+h
+8app/src/main/java/com/esi/myapplication/ui/TabManager.kt,e\3\e3ba6ce7f22f0d2ed9a35d803d0785135cf3fb21
+l
+<app/src/main/java/com/esi/myapplication/ui/DetailFragment.kt,c\e\cefbd46cbe58f2c8b67504a533d13ba1ccef6f4d
