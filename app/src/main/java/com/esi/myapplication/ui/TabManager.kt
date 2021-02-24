@@ -8,7 +8,7 @@ import com.esi.myapplication.ui.dashboard.DashboardFragment
 import com.esi.myapplication.ui.home.HomeFragment
 import com.esi.myapplication.ui.notification.NotificationsFragment
 
-class TabManager private constructor(private val mainActivity: MainActivity) {
+class TabManager constructor(private val mainActivity: MainActivity) {
     private val tabHistory = TabHistory()
     private var currentTabContainer: Int = 0
     private var currentTabId: Int = 0
@@ -107,13 +107,5 @@ class TabManager private constructor(private val mainActivity: MainActivity) {
 
     companion object {
         private const val TAG = "TabManager"
-        private var INSTANCE: TabManager? = null
-
-        fun getInstance(mainActivity: MainActivity): TabManager {
-            INSTANCE ?: apply {
-                INSTANCE = TabManager(mainActivity)
-            }
-            return INSTANCE!!
-        }
     }
 }

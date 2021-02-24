@@ -1,21 +1,16 @@
 package com.esi.myapplication.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.esi.myapplication.MainActivity
+import com.esi.myapplication.Navigator
 import com.esi.myapplication.R
 import kotlinx.android.synthetic.main.fragment_detail.*
 
 
 class DetailFragment : Fragment() {
-
-    private val tabManager by lazy {
-        TabManager.getInstance(requireActivity() as MainActivity)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,11 +24,8 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         message.text = "Number: ${getPageNumber()} Parent: ${getParentName()}"
 
-        Log.d(TAG, "Message: ${message.text}")
-
         buttonNextPage.setOnClickListener {
-            Log.d(TAG, "onViewCreated() called")
-            tabManager.nagivateInTab(
+            (activity as? Navigator)?.navigateInTab(
                 newInstance(
                     getPageNumber()?.plus(1) ?: 1,
                     DetailFragment::class.java.simpleName

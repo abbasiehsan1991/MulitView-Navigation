@@ -3,14 +3,16 @@ package com.esi.myapplication
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.esi.myapplication.ui.TabManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
+    Navigator {
 
     private val tabManager: TabManager by lazy {
-        TabManager.getInstance(this)
+        TabManager(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,5 +30,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         tabManager.switchTab(item.itemId)
         return true
+    }
+
+    override fun navigateInTab(fragment: Fragment, tag: String) {
+        tabManager.nagivateInTab(fragment, tag)
     }
 }
